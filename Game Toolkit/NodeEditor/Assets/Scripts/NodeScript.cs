@@ -22,6 +22,8 @@ public class NodeScript : MonoBehaviour
 
     public object root;
 
+    public string someTexts;
+
     public NodeScript()
     {
         AvailableNodeTypes.Clear();

@@ -10,18 +10,31 @@ using UnityEditor;
 /// On: 25/06/2015
 /// 
 /// </summary>
+[CanEditMultipleObjects]
 [CustomEditor(typeof(NodeScript))]
-public class ObjectBuilderEditor : Editor
+public class NodeInspector : Editor
 {
     NodeEditor editor = null;
+    NodeScript myScript = null;
+
+    SerializedObject script;
+    SerializedProperty rootProperty;
+
+    void OnEnable()
+    {
+        myScript = (NodeScript)target;
+        script = new SerializedObject(myScript);
+        rootProperty = script.FindProperty("root");
+    }
 
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
 
-        NodeScript myScript = (NodeScript)target;
         if (GUILayout.Button(new GUIContent("Edit Node", "Click to edit the node stack")))
         {
+            EditorUtility.SetDirty(myScript);
+
             editor = EditorWindow.GetWindow<NodeEditor>();
 
             editor.RootNode = myScript.root;
@@ -30,10 +43,15 @@ public class ObjectBuilderEditor : Editor
             editor.Init();
         }
 
-        if (editor != null)        
+        if (editor != null)
+        {
             myScript.root = editor.RootNode;
+        }
             
         GUILayout.Label(new GUIContent(string.Format("Root Node: {0}", myScript.root == null ? "None Set" : myScript.root.GetType().Name), "Current root node"));
+
+        script.ApplyModifiedProperties();
+
         Repaint();
     }
 

@@ -13,8 +13,7 @@ namespace Noise.Modules.Operator
         /// <summary>
         /// Initializes a new instance of Add.
         /// </summary>
-        public Add()
-            : base(2)
+        public Add() : base(2)
         {
         }
 
